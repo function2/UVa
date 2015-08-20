@@ -38,7 +38,7 @@ env.Append(LINKFLAGS = LINK_FLAGS)
 # (Output object file, Input source file)
 sources = []
 
-r = re.compile("1_1000/") # Remove "directory"
+r = re.compile("") # Remove "directory"
 r2 = re.compile("\.cpp") # Remove ".cpp"
 for source in glob.glob("1_1000/*/*.cpp"):
     name = r.sub('',source)

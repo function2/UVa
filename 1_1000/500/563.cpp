@@ -10,8 +10,8 @@ using namespace std;
 
 /*
   This is a graph theory (source->sink) problem in disguise.
-You might be able to solve this without graphs, but I couldn't
-find a solution that way.
+  You might be able to solve this without graphs, but I couldn't
+  find a solution that way.
   We setup the graph, then use the Ford-Fulkerson algorithm to
   determine the max flow.
   The max flow coming in the sink should be equal to the number
@@ -48,7 +48,7 @@ public:
     OUTPUT: flow in/out for each vertex.
     returns max flow.
     flows should be empty. It will return the flows for each edge.
-   */
+  */
   int MaxFlow(
     int source_idx, int sink_idx,
     map<int, map<int, flow_edge> >  &flows)
@@ -169,9 +169,9 @@ public:
     return MaxFlow(source_idx, sink_idx, flows);
   }
 
-  private:
+private:
   const vector<vector<edge> > &_graph;
-  };
+};
 //============================================================
 
 //============================================================
