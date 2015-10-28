@@ -40,7 +40,12 @@ sources = []
 
 r = re.compile("") # Remove "directory"
 r2 = re.compile("\.cpp") # Remove ".cpp"
-for source in glob.glob("1_1000/*/*.cpp"):
+
+# All source files.
+g = glob.glob("1_1000/*/*.cpp")
+g += glob.glob("10000_11000/*/*.cpp")
+
+for source in g:
     name = r.sub('',source)
     name = r2.sub('',name)
     sources.append( ('obj/' + name, source) )

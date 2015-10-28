@@ -59,12 +59,12 @@ public:
 
         // residual capacity = c_f(u,v) = cap(u,v) - flow(u,v)
         flows[from][to].c_f = _graph[from][to_idx].capacity;
-        flows[to][from].c_f = 0;
+        //        flows[to][from].c_f = 0;
       }
     }
 
-    vector<int> mins(_graph.size(), 999999999);
-    vector<int> lasts(_graph.size(), -1);
+    vector<int> mins;
+    vector<int> lasts;
 
     for(;;) { // while a path has been found...
       // ===== Find a path in the residual graph. =====
@@ -163,14 +163,12 @@ private:
 };
 //============================================================
 
-int main()
+void Solve()
 {
   // Read input.
   int num_receptacles;
   cin >> num_receptacles;
-
   vector<string> receptacles(num_receptacles);
-
   for(int k = 0;k < num_receptacles;++k)
     cin >> receptacles[k];
 
@@ -186,18 +184,35 @@ int main()
   int num_adapter_avail;
   cin >> num_adapter_avail;
   vector<pair<string, string> > adapter;
+  map<string,string> have;
   for(int k = 0;k < num_adapter_avail; ++k) {
     string a,b;
     cin >> a >> b;
     if(a == b) continue;
-    adapter.push_back(make_pair(a,b));
+    if(have[b] == a){
+      // This will create
+      // a loop with two edges, two vertices.
+      // This is when you have an adapter with
+      // A B
+      //  and
+      // B A
+      // Fix this by making a third vertex.
+      string bprime = "__" + a + b;
+      // A  __B
+      adapter.push_back(make_pair(a, bprime));
+      // __B  B
+      adapter.push_back(make_pair(bprime, b));
+    }else{
+      have[a] = b;
+      adapter.push_back(make_pair(a,b));
+    }
   }
   num_adapter_avail = adapter.size();
 
   if(!cin)
     cerr << "problem reading input\n";
 
-  // Done reading input.
+  // // Done reading input.
   // cerr << "num_receptacles = " << num_receptacles << '\n';
   // cerr << "num_devices = " << num_devices << '\n';
   // cerr << "num_adapter = " << num_adapter_avail << '\n';
@@ -242,6 +257,7 @@ int main()
       }
     }
   }
+
   // Adapter out should point to receptacles.
   for(size_t k = 0;k < adapter.size(); ++k){
     string type = adapter[k].second;
@@ -259,12 +275,31 @@ int main()
     for(size_t j = 0;j < adapter.size(); ++j){
       if(type == adapter[j].first){
         //
-        edge e = {int(2 + num_devices + num_receptacles + j), 101};
+        edge e = {int(2 + num_devices + num_receptacles + j), 9999999};
         graph[2 + num_devices + num_receptacles + k].push_back(e);
       }
     }
   }
 
+  // // Debug, output graph.
+  // for(size_t k = 0;k < graph.size(); ++k){
+  //   cerr << k << ":";
+  //   for(size_t j = 0;j < graph[k].size(); ++j)
+  //     cerr << ' ' << "(" << graph[k][j].to << "/" << graph[k][j].capacity << ")";
+  //   cerr << '\n';
+  // }
+
   FordFulkerson f(graph);
-  cout << num_devices - f.MaxFlow(SOURCE, SINK) << '\n';
+  cout << num_devices - f.MaxFlow(SOURCE, SINK) << "\n\n";
+}
+
+int main()
+{
+  // This problem description changed while working on it???
+  // apparently there are multiple test cases, when it
+  // said it before there was one.
+  int num_tests;
+  cin >> num_tests;
+  for(int k = 0;k < num_tests;++k)
+    Solve();
 }
